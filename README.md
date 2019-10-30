@@ -1,4 +1,5 @@
-**SKYSTONE_CV**
+**SKYSTONE_CV**. 
+
 THIS DETECTOR RETURNS THE PIXEL LOCATION OF THE LEFT MOST BOUNDARY OF THE BLACK TARGET. 
 YOU CAN EASILY MODIFY IT TO GET YOU THE CENTER. 
 IT IS YOUR JOB TO DETERMINE WHERE YOU WANT TO GO BASED ON THIS VALUE. 
@@ -15,3 +16,5 @@ IF YOU FEEL THAT SOME PARTS OF THIS PIPELINE ARENT NEEDED, THEN REMOVE THEM
 TO IMPROVE FRAMERATE. 
 
 If possible, feed this pipeline into easy open cv to get a slightly better framerate. I was getting weird errors with eocv so I used vuforia to get frames instead, but it seems to work in most configurations. 
+
+![img](https://imgur.com/iYZOm8w)
