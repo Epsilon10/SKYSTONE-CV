@@ -17,4 +17,4 @@ TO IMPROVE FRAMERATE.
 
 If possible, feed this pipeline into easy open cv to get a slightly better framerate. I was getting weird errors with eocv so I used vuforia to get frames instead, but it seems to work in most configurations. 
 
-![img](https://imgur.com/iYZOm8w)
+![img](pic.png)
