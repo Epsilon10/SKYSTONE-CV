@@ -19,3 +19,8 @@ This detector focuses on versatility, not speed, so it is relatively heavy. Idea
 Currently, I am using vuforia to get frames from the camera. This is not ideal and you should instead use EasyOpenCV which grabs frames natively. For various reasons I am not using it at the moment, but I recommend you try it out. 
 
 ![img](pic.png)
+
+After a lot of filters, I employ a solid way of detecting the location of the vumark based on a graph of the image column sums as show here:
+![img](graph.png)
+
+As you can see, the large peak represents a vumark on the left
