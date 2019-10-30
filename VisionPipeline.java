@@ -202,8 +202,8 @@ public class VisionPipeline {
 
             if (colsumArray[i] < maxVumarkValue) {
                 // Log.d("colsum", i+"");
-                if (i + 40 > colsumArray.length - 1) return 101;
-                int[] slice = Arrays.copyOfRange(colsumArray, i, i+40);
+                if (i + valleyLength > colsumArray.length - 1) return 101; // probably fix this lol
+                int[] slice = Arrays.copyOfRange(colsumArray, i, i+valleyLength);
                 if (isLargeValley(slice, 80, 25)) {
 
                     return i;
