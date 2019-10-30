@@ -1,20 +1,21 @@
 **SKYSTONE_CV**. 
 
-THIS DETECTOR RETURNS THE PIXEL LOCATION OF THE LEFT MOST BOUNDARY OF THE BLACK TARGET. 
-YOU CAN EASILY MODIFY IT TO GET YOU THE CENTER. 
-IT IS YOUR JOB TO DETERMINE WHERE YOU WANT TO GO BASED ON THIS VALUE. 
+This detector returns the pixel location of the left most boundary of the black target. 
+You can easily modify it to get you the center. 
+It is your job to determine what you want to do with this value.
+The methods you care about are 
+`VisionPipline#process` and `VisionPipline#getVumarkLeftBoundary`
 
-SOMETIMES THERE IS SOME RANDOM CRASH THAT HAPPENS IF UR CAMERA WOBBLES A LOT
-I AM LOOKING INTO A FIX, BUT AS LONG AS UR CAMERA DOESN"T FLAIL WILDLY IN MATCH U R GOOD. 
+It is unlikely that this detector works flawlessy out of the box without you tuning some parameters such as contour area, width, ect. These parameters depend on you webcams placement so it is best to test these empirically. 
 
-IF YOU SEE BUGS PLEASE MESSAGE ME ON DISCORD at Epsilon#0036. 
-THIS IS BY NO MEANS ROBUST, BUT IT WORKS WELL FOR ME. 
+NOTE:
+I am aware of an issue that occurs when the camera's view wobbles a lot and the blocks go out of frame. 
+I am looking into a fix for this, but as long as your camera isn't flailing wildly you should be fine. 
 
-THIS DETECTOR SACRIFICES SPEED FOR A LOT OF VERSATILITY AS
-IT FUNCTIONS WITH LOTS OF NOISE BY PERFORMING LOTS OF FILTERS. 
-IF YOU FEEL THAT SOME PARTS OF THIS PIPELINE ARENT NEEDED, THEN REMOVE THEM
-TO IMPROVE FRAMERATE. 
+If you see bugs, dm me on discord at Epsilon#0036, or drop an issue.
 
-If possible, feed this pipeline into easy open cv to get a slightly better framerate. I was getting weird errors with eocv so I used vuforia to get frames instead, but it seems to work in most configurations. 
+This detector focuses on versatility, not speed, so it is relatively heavy. Ideally, based on your webcam placement, you can remove some filters to increase framerate. 
+
+Currently, I am using vuforia to get frames from the camera. This is not ideal and you should instead use EasyOpenCV which grabs frames natively. For various reasons I am not using it at the moment, but I recommend you try it out. 
 
 ![img](pic.png)
