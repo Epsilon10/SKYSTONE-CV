@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class VisionPipeline {
+public class VisionPipeline extends OpenCvPipeline{
     // THIS DETECTOR RETURNS THE PIXEL LOCATION OF THE LEFT MOST BOUNDARY OF THE BLACK TARGET
     // YOU CAN EASILY MODIFY IT TO GET YOU THE CENTER
     // IT IS YOUR JOB TO DETERMINE WHERE YOU WANT TO GO BASED ON THIS VALUE
@@ -60,7 +60,7 @@ public class VisionPipeline {
 
     // TUNE THESE THEY WILL VARY BASED ON WEBCAM PLACEMENT!!!!!
 
-    private final int maxVumarkValue = 150;
+    private final int maxVumarkValue = 80; // used to be 150
     private final int valleyLength = 40;
 
     private int vumarkLeftBoundary = -1;
@@ -73,10 +73,10 @@ public class VisionPipeline {
 
     // private CSVWriter csvWriter = new CSVWriter(new File("colsums.java"));
 
-    private boolean shouldWrite = false;
 
-    public Mat processFrame(Mat input, boolean shouldWrite) {
-        this.shouldWrite = shouldWrite;
+    private final int INDEX_ERROR = -2; // index error code
+
+    public Mat processFrame(Mat input) {
         Mat workingMat = input.clone();
         Imgproc.cvtColor(workingMat,workingMat,Imgproc.COLOR_RGB2HSV); // convert to HSV space
 
@@ -94,7 +94,7 @@ public class VisionPipeline {
         workingMat.release();
 
         // draw stones (but not skystones)
-        if (minX > 1e5 || maxX < 0 || minY > 1e5 || maxY < 0) return mask;
+        if (minX > 1e5 || maxX < 0 || minY > 1e5 || maxY < 0) return input;
 
         Rect r = new Rect(new Point(minX, minY + 150), new Point(maxX,  maxY));
         Imgproc.rectangle(input, r, new Scalar(0,0,255));
@@ -102,7 +102,7 @@ public class VisionPipeline {
         // crop vertically
 
         Mat cbMat = crop(input.clone(),new Point(0, minY + 150), new Point(input.width() - 1,  maxY));
-        input = crop(input,new Point(0, minY + 150), new Point(input.width() - 3,  maxY));
+        // input = crop(input,new Point(0, minY + 150), new Point(input.width() - 3,  maxY));
 
         Imgproc.cvtColor(cbMat,cbMat,Imgproc.COLOR_RGB2YCrCb); // convert to ycrcb
         Core.extractChannel(cbMat, cbMat, 2); // extract cb channel
@@ -115,7 +115,6 @@ public class VisionPipeline {
         resetRectangle();
         // build the max bounding rect
         filterContours(stoneContours2,finalOutputContours, minContourArea, minContourPerimeter, minContourWidth, minContourHeight);
-
         if (finalOutputContours.size() == 0) return input;
 
         // crop so we only see the stones
@@ -123,16 +122,18 @@ public class VisionPipeline {
         Mat cbCrop = crop(cbMat, allStonesRect);
 
         // crop so we only have the stones in the image
-        Imgproc.drawContours(input, finalOutputContours, -1, new Scalar(0,0,255), 10);
+        // Imgproc.drawContours(input, finalOutputContours, -1, new Scalar(0,0,255), 10);
 
-
-        Imgproc.rectangle(input, getMaxRectangle(), new Scalar(0,255,0), 8);
+        Rect oBoundingRect = getMaxRectangle();
+        Rect correctedRect = new Rect(new Point(oBoundingRect.x + minX, r.y), new Point(oBoundingRect.x +oBoundingRect.width + minX, r.y + r.height));
+        //Imgproc.rectangle(input, correctedRect, new Scalar(0,255,0), 8);
 
 
         vumarkLeftBoundary = getMaxDropoff(cbCrop);
+        Log.d("VUMARK: ", vumarkLeftBoundary+"");
 
         // this just estimates where the marker is, dont rely on this
-        Imgproc.circle(input,new Point(vumarkLeftBoundary + 200, cbMat.height() / 2), 150, new Scalar(255,0,0), 10);
+        Imgproc.circle(input,new Point(vumarkLeftBoundary + 200, input.height() / 2), 60, new Scalar(255,0,0), 10);
         resetRectangle();
 
         /*
@@ -202,9 +203,9 @@ public class VisionPipeline {
 
             if (colsumArray[i] < maxVumarkValue) {
                 // Log.d("colsum", i+"");
-                if (i + valleyLength > colsumArray.length - 1) return 101; // probably fix this lol
+                if (i + valleyLength > colsumArray.length - 1) return INDEX_ERROR;
                 int[] slice = Arrays.copyOfRange(colsumArray, i, i+valleyLength);
-                if (isLargeValley(slice, 80, 25)) {
+                if (isLargeValley(slice, maxVumarkValue, 25)) {
 
                     return i;
                 }
