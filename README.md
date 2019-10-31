@@ -27,3 +27,6 @@ After a lot of filters, I employ a solid way of detecting the location of the vu
 ![img](graph.png)
 
 As you can see, the large peak represents a vumark on the left
+
+**Heres a video of it working**
+https://drive.google.com/open?id=1D9Ino6tlKytlD2TZUjppb3n0ptsR9mGo
