@@ -1,4 +1,7 @@
-**SKYSTONE_CV**. 
+
+**NOTE: seems to be bugged out with EasyOpenCV. I am looking into a fix today (10/31/2019). I will update this README soon**  .
+
+**SKYSTONE_CV (Unstable, not ready for competition use)**. 
 
 This detector returns the pixel location of the left most boundary of the black target. 
 You can easily modify it to get you the center. 
